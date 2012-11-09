@@ -1,17 +1,18 @@
 <?php
+
 /***************************************************************************
  *
- *	OUGC Show Self Unaproved plugin
- *	Author: Pirata Nervo
- *	Copyright: © 2009-2010 Pirata Nervo
+ *   OUGC Show Self Unaproved plugin (/inc/plugins/ougc_showselfunapproved.php)
+ *	 Author: Omar Gonzalez
+ *   Copyright: © 2012 Omar Gonzalez
  *   
- *	Website: http://www.consoleworld.net
+ *   Website: http://community.mybb.com/user-25096.html
  *
- *	Allow users to see their own unapproved post/threads from the showthread/forumdisplay/search pages.
+ *   Allow users to see their own unapproved post/threads from the showthread/forumdisplay/search pages.
  *
- ***************************************************************************/
+ ***************************************************************************
  
-/****************************************************************************
+****************************************************************************
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
