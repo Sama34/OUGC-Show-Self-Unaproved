@@ -59,11 +59,11 @@ if(defined('IN_ADMINCP'))
 			$lang->ougc_showselfunapproved_d .= '<ul><li style="list-style-image: url(styles/default/images/icons/custom.gif)"><a href="'.$PL->url_append('index.php', array('module' => 'config-plugins', 'ougc_showselfunapproved' => $action, 'my_post_key' => $GLOBALS['mybb']->post_code)).'">'.$lang->$lang_val.'</a></li></ul>';
 		}
 		return array(
-			'name'			=> 'OUGC Show Self Unaproved threads',
+			'name'			=> 'OUGC Show Self Unaproved',
 			'description'	=> $lang->ougc_showselfunapproved_d,
-			'website'		=> 'http://udezain.com.ar/',
+			'website'		=> 'http://mods.mybb.com/view/ougc-show-self-unaproved',
 			'author'		=> 'Omar Gonzalez',
-			'authorsite'	=> 'http://udezain.com.ar/',
+			'authorsite'	=> 'http://community.mybb.com/user-25096.html',
 			'version'		=> '1.0',
 			'compatibility'	=> '16*'
 		);
