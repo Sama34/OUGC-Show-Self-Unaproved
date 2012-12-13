@@ -194,7 +194,7 @@ else
 		$tvisibleonly_replace = "AND (t.visible=\'1\' OR (t.uid=\'{$mybb->user['uid']}\' AND t.visible!=\'1\'))";
 
 		// Do it!
-		control_object($GLOBALS['db'], '
+		ougc_showselfunapproved_control_object($GLOBALS['db'], '
 			function query($string, $hide_errors=0, $write_query=0) {
 				if(!$write_query && strpos($string, \''.$visibleonly_search.'\') && !strpos($string, \''.$visibleonly_replace.'\')) {
 					$string = strtr($string, array(
@@ -231,7 +231,7 @@ else
 		$visibleonly_replace3 = "AND (t.visible=\'1\' OR (t.visible!=\'1\' AND t.uid=\'{$mybb->user['uid']}\'))";
 
 		// Do it!
-		control_object($GLOBALS['db'], '
+		ougc_showselfunapproved_control_object($GLOBALS['db'], '
 			function query($string, $hide_errors=0, $write_query=0) {
 				if(!$write_query && strpos($string, \''.$visibleonly_search1.'\') && !strpos($string, \''.$visibleonly_replace1.'\'))
 				{
@@ -276,7 +276,7 @@ else
 		$visibleonly_replace3 = "(visible < 1 OR (visible > 0 AND uid={$mybb->user['uid']}))";
 
 		// Do it!
-		control_object($GLOBALS['db'], '
+		ougc_showselfunapproved_control_object($GLOBALS['db'], '
 			function query($string, $hide_errors=0, $write_query=0) {
 				if(!$write_query && strpos($string, \''.$visibleonly_search1.'\') && !strpos($string, \''.$visibleonly_replace1.'\'))
 				{
@@ -301,42 +301,43 @@ else
 		');
 	}
 
-	// Control object written by Zinga Burga / Yumi from the MyBBHacks community (http://mybbhacks.zingaburga.com)
-	if(!function_exists('control_object'))
+	// control_object by Zinga Burga from MyBBHacks ( mybbhacks.zingaburga.com ), 1.62
+	function ougc_showselfunapproved_control_object(&$obj, $code)
 	{
-		function control_object(&$obj, $code)
+		static $cnt = 0;
+		$newname = '_objcont_'.(++$cnt);
+		$objserial = serialize($obj);
+		$classname = get_class($obj);
+		$checkstr = 'O:'.strlen($classname).':"'.$classname.'":';
+		$checkstr_len = strlen($checkstr);
+		if(substr($objserial, 0, $checkstr_len) == $checkstr)
 		{
-			static $cnt = 0;
-			$newname = '_objcont_'.(++$cnt);
-			$objserial = serialize($obj);
-			$classname = get_class($obj);
-			$checkstr = 'O:'.strlen($classname).':"'.$classname.'":';
-			$checkstr_len = strlen($checkstr);
-			if(substr($objserial, 0, $checkstr_len) == $checkstr)
+			$vars = array();
+			// grab resources/object etc, stripping scope info from keys
+			foreach((array)$obj as $k => $v)
 			{
-				$vars = array();
-				foreach((array)$obj as $k => $v)
+				if($p = strrpos($k, "\0"))
 				{
-					if($p = strrpos($k, "\0"))
-						$k = substr($k, $p+1);
-					$vars[$k] = $v;
+					$k = substr($k, $p+1);
 				}
-				if(!empty($vars))
-				{
-					$code .= '
-						function ___setvars(&$a) {
-							foreach($a as $k => &$v)
-								$this->$k = $v;
-						}
-					';
-				}
-				eval('class '.$newname.' extends '.$classname.' {'.$code.'}');
-				$obj = unserialize('O:'.strlen($newname).':"'.$newname.'":'.substr($objserial, $checkstr_len));
-				if(!empty($vars))
-				{
-					$obj->___setvars($vars);
-				}
+				$vars[$k] = $v;
+			}
+			if(!empty($vars))
+			{
+				$code .= '
+					function ___setvars(&$a) {
+						foreach($a as $k => &$v)
+							$this->$k = $v;
+					}
+				';
+			}
+			eval('class '.$newname.' extends '.$classname.' {'.$code.'}');
+			$obj = unserialize('O:'.strlen($newname).':"'.$newname.'":'.substr($objserial, $checkstr_len));
+			if(!empty($vars))
+			{
+				$obj->___setvars($vars);
 			}
 		}
+		// else not a valid object or PHP serialize has changed
 	}
 }
